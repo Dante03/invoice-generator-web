@@ -2,49 +2,36 @@
 import { ref, computed, watch } from 'vue'
 import type { InvoiceItem, Totals } from '@/types/invoice'
 
-/* =========================
-   EXISTENTE (NO SE TOCA)
-========================= */
 const items = ref<InvoiceItem[]>([])
+const typeRef = ref('SERVICE')
+const discountRef = ref(0)
 const taxRate = ref(0.16)
 
-/* =========================
-   NUEVO – HEADER / COMPANY
-========================= */
 const company = ref({
   name: '',
-  street: '',
   city: '',
+  country: '',
+  address: '',
   email: ''
 })
 
-/* =========================
-   NUEVO – CLIENT
-========================= */
 const client = ref({
   name: '',
   email: '',
-  address: ''
+  address: '',
+  city: '',
+  country: ''
 })
 
-/* =========================
-   NUEVO – INVOICE META
-========================= */
 const invoiceMeta = ref({
   number: 'INV-001',
   date: new Date().toISOString().substring(0, 10),
   dueDate: ''
 })
 
-/* =========================
-   NUEVO – NOTES / TERMS
-========================= */
 const notes = ref('')
 const terms = ref('')
 
-/* =========================
-   EXISTENTE (LÓGICA RESPETADA)
-========================= */
 const totals = computed<Totals>(() => {
   let subtotal = 0
   let discount = 0
@@ -53,13 +40,13 @@ const totals = computed<Totals>(() => {
   if (!items.value.length) {
     return {
       subtotal,
-      discount,
+      discount: discountRef.value,
       taxRate: taxRate.value,
       total: 0
     }
   }
 
-  const type = items.value[0]?.type
+  const type = typeRef.value
 
   items.value.forEach(i => {
     const base = i.price * i.quantity
@@ -81,9 +68,6 @@ const totals = computed<Totals>(() => {
   }
 })
 
-/* =========================
-   EXISTENTE – WATCH (NO TOCAR)
-========================= */
 watch(items, () => {
   const types = [...new Set(items.value.map(i => i.type))]
   if (types.length > 1) {
@@ -92,31 +76,27 @@ watch(items, () => {
   }
 }, { deep: true })
 
-/* =========================
-   NUEVO – PAYLOAD FINAL
-========================= */
+
 const invoicePayload = computed(() => ({
-  company: company.value,
+  seller: company.value,
   client: client.value,
   invoiceMeta: invoiceMeta.value,
   items: items.value,
   notes: notes.value,
   terms: terms.value,
+  type: typeRef.value,
   taxRate: taxRate.value,
+  discount: discountRef.value,
   totals: totals.value
 }))
 
-/* =========================
-   EXPORT
-========================= */
 export const useInvoice = () => {
   return {
-    // existente
     items,
     taxRate,
     totals,
-
-    // nuevo
+    typeRef,
+    discountRef,
     company,
     client,
     invoiceMeta,

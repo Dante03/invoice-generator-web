@@ -12,6 +12,8 @@ const { client } = useInvoice()
     <input v-model="client.name" placeholder="Client name" class="input mb-2" />
 
     <input v-model="client.email" placeholder="Client email" class="input mb-2" />
+    <input v-model="client.city" placeholder="Client city" class="input mb-2" />
+    <input v-model="client.country" placeholder="Client coutry" class="input mb-2" />
 
     <textarea v-model="client.address" placeholder="Client address" rows="3" class="input" />
   </section>

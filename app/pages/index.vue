@@ -7,25 +7,19 @@ const { items, totals, taxRate } = useInvoice()
 
 const generateInvoice = async () => {
     try {
-        const { data } = await axios.post(
+        const response = await axios.post(
             `${config.public.apiBase}/invoices`,
-            invoicePayload.value
+            invoicePayload.value,
+            { responseType: 'blob' }
         )
-        alert('Invoice generated')
-
-        const fileUrl = `${config.public.apiBase}/download/invoice/${data.pdf_url}`
-
-        setTimeout(async () => {
-            const response = await axios.get(fileUrl, { responseType: 'blob' })
-            const blob = new Blob([response.data], { type: 'application/pdf' })
-            const url = window.URL.createObjectURL(blob)
-            const fileName = data.pdf_url.split('/').pop()
-            const link = document.createElement('a')
-            link.href = url
-            link.download = fileName
-            link.click()
-            window.URL.revokeObjectURL(url)
-        }, 5000)
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const fileName = "invoice.pdf"
+        const link = document.createElement('a')
+        link.href = url
+        link.download = fileName
+        link.click()
+        window.URL.revokeObjectURL(url)
 
     } catch (e) {
         alert('Error generating invoice')
@@ -36,25 +30,19 @@ const generateInvoice = async () => {
 <template>
     <main class="min-h-screen bg-gray-100 py-10">
         <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-10">
-
-            <!-- HEADER -->
             <header class="mb-10">
                 <h1 class="text-4xl font-serif text-gray-900">
                     Invoice
                 </h1>
             </header>
 
-            <!-- GRID -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
-                <!-- LEFT -->
                 <div class="lg:col-span-2 space-y-10">
                     <InvoiceHeader />
                     <BillTo />
-
                     <InvoiceForm />
-                    <InvoiceNotes />
                     <InvoiceItems />
+                    <InvoiceNotes />
                 </div>
 
                 <!-- RIGHT -->

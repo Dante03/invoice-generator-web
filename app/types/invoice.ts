@@ -2,8 +2,8 @@ export type ItemType = 'SERVICE' | 'PRODUCT'
 
 export interface InvoiceItem {
     id: number
-    name: string
-    type: ItemType
+    description: string
+    type: string
     price: number
     quantity: number
     discount: number

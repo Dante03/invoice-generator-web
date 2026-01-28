@@ -6,18 +6,16 @@ const { company, invoiceMeta } = useInvoice()
 <template>
   <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
 
-    <!-- LEFT: COMPANY INFO -->
     <div class="space-y-3">
       <input v-model="company.name" placeholder="Your company" class="input-lg font-semibold" />
 
-      <input v-model="company.street" placeholder="Street address" class="input" />
-
       <input v-model="company.city" placeholder="City, State ZIP" class="input" />
 
+      <input v-model="company.country" placeholder="Country" class="input" />
+      <input v-model="company.address" placeholder="Address" class="input" />
       <input v-model="company.email" placeholder="country@email.com" class="input" />
     </div>
 
-    <!-- RIGHT: INVOICE META -->
     <div class="space-y-3 text-sm md:text-right">
       <div>
         <label class="font-semibold text-gray-600">Invoice #</label>

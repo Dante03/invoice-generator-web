@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ssr: true,
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:8000/api'
+      apiBase: 'https://invoice-generator-web-api.onrender.com/api'
     }
   },
   devtools: { enabled: true },
