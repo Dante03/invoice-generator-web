@@ -11,7 +11,22 @@ const generateInvoice = async () => {
             `${config.public.apiBase}/invoices`,
             invoicePayload.value
         )
-        alert(`Invoice #${data.id} generated`)
+        alert('Invoice generated')
+
+        const fileUrl = `${config.public.apiBase}/download/invoice/${data.pdf_url}`
+
+        setTimeout(async () => {
+            const response = await axios.get(fileUrl, { responseType: 'blob' })
+            const blob = new Blob([response.data], { type: 'application/pdf' })
+            const url = window.URL.createObjectURL(blob)
+            const fileName = data.pdf_url.split('/').pop()
+            const link = document.createElement('a')
+            link.href = url
+            link.download = fileName
+            link.click()
+            window.URL.revokeObjectURL(url)
+        }, 5000)
+
     } catch (e) {
         alert('Error generating invoice')
     }
